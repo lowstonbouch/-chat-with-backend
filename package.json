@@ -1,0 +1,26 @@
+{
+  "name": "noderestful",
+  "version": "1.0.0",
+  "description": "Node Restful",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "restful"
+  ],
+  "author": "Srinivas Tamada",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bcrypt": "^1.0.2",
+    "express": "^4.10.2",
+    "hapi": "^16.1.0",
+    "joi": "^10.2.1",
+    "mysql": "^2.13.0",
+    "require": "^2.4.20",
+    "socket.io": "^2.1.0",
+    "websocket": "^1.0.26"
+  }
+}
