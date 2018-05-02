@@ -3,15 +3,42 @@
   <head>
     <meta charset="utf-8">
     <title>WebSockets - Simple chat</title>
+    <link rel="stylesheet" href="./styles/style.css">
   </head>
   <body>
-        <form name="publish">
-                <input type="text" name="message">
-                <input type="submit" value="Отправить">
-              </form>
-              
-              <!-- здесь будут появляться входящие сообщения -->
-              <div id="subscribe"></div>
-              <script async src="./js/main.js"></script>
+      <header id = "header">
+          <button id = "log-in">log in</button>
+          <button id = "sign-in">sign in</button>
+      </header>
+      <section>
+          <div id="login-section" class = "log-in none">
+                <form name="loginForm">
+                        <p>login</p>
+                        <input type="text" name="login" class = "login-input">
+                        <p>password</p>
+                        <input type="text" name="password" class = "login-input">
+                        <input type="submit" value="Отправить" class = "submit">
+                </form>
+          </div>
+          <div id="signin-section" class = "sign-in none">
+                <form name="signinForm">
+                        <p>login</p>
+                        <input type="text" name="login" class = "signin-input">
+                        <p>email</p>
+                        <input type="text" name="email" class = "signin-input">
+                        <p>login</p>
+                        <input type="text" name="password" class = "signin-input">
+                        <input type="submit" value="Отправить" class = "submit">
+                </form>
+          </div>
+          <div id="messanger-section" class = "messanger">
+                <form name="publish">
+                        <input type="text" name="message" class = "message">
+                        <input type="submit" value="Отправить" class = "submit">
+                </form>
+                <div id="subscribe"></div>
+          </div>
+      </section>
+        <script async src="./js/main.js"></script>
   </body>
 </html>

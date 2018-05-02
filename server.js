@@ -5,42 +5,122 @@ var clients = {};
 
 wss.on('connection', function (ws) {
     console.log("Client connected");
-    // ws.on('message', function (sData) {
-    //     console.log(sData);
-    //     var data = JSON.parse(sData);
-    //     console.log(data.message);
-    //     if (data && data.message == "insert" && data.user) { 
-    //         var mysql = require('mysql');
-    //         var conn = mysql.createConnection({
-    //             host     : 'localhost',
-    //             user     : 'root',
-    //             password : "3752",
-    //             database : 'messangerDB'
-    //         });
-    //         conn.connect();
-    //         conn.query('SELECT uid, username FROM users', function (err, result) {
-    //             if (err)
-    //                 ws.send(JSON.stringify(err));
-    //             console.log('her',result);
-    //             ws.send("ok");
-    //             ws.close();
-    //         }); 
-    //         conn.end();
-    //     } else
-    //         console.log(data);
-    // });
-
   var id = Math.random();
   clients[id] = ws;
   console.log("новое соединение " + id);
 
-  ws.on('message', function(message) {
-    console.log('получено сообщение ' + message);
+      ws.on('message', function (sData) {
+        console.log(sData);
+        var data = JSON.parse(sData);
+        console.log(data.message);
+        if (data && data.message == "message" && data.user) { 
+            var mysql = require('mysql');
+            var conn = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : "3752",
+                database : 'messangerDB'
+            });
+            conn.connect();
+            conn.query('INSERT INTO messages (message,uid_fk) VALUES ("' + data.user.value + '","' + data.user.uid + '")', function (err, result) {
+                if (err)
+                    ws.send(JSON.stringify(err));
+                console.log('her',result);
+                    for (var key in clients) {
+                        clients[key].send(JSON.stringify({
+                            message: 'message',
+                            value: data.user.value
+                        }));
+                    }
+                // ws.send(JSON.stringify({
+                //     message: 'message',
+                //     value: data.user.value
+                // }));
+            }); 
+            conn.end();
+        } else
+            console.log(data);
+    });
 
-    for (var key in clients) {
-      clients[key].send(message);
-    }
-  });
+        ws.on('message', function (sData) {
+        console.log(sData);
+        var data = JSON.parse(sData);
+        console.log(data.message);
+        if (data && data.message == "login" && data.user) { 
+            var mysql = require('mysql');
+            var conn = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : "3752",
+                database : 'messangerDB'
+            });
+            conn.connect();
+            conn.query('SELECT uid, username, password FROM users', function (err, result) {
+                if (err)
+                    ws.send(JSON.stringify(err));
+                console.log('her1',result);
+                for(let i = 0; i < result.length; i++){
+                    console.log('for',result[i].username, result[i].password);
+                    console.log('data',data.user.username, data.user.password )
+                    if(result[i].username === data.user.username && result[i].password === data.user.password){
+                        console.log('ok');
+                        ws.send(JSON.stringify({
+                            message: 'login',
+                            value: result[i].uid
+                        }));
+                    }
+                }
+            }); 
+            conn.end();
+        } else
+            console.log(data);
+    });
+
+    ws.on('message', function (sData) {
+        console.log(sData);
+        var data = JSON.parse(sData);
+        console.log(data.message);
+        if (data && data.message == "signin" && data.user) { 
+            var mysql = require('mysql');
+            var conn = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : "3752",
+                database : 'messangerDB'
+            });
+            conn.connect();
+            conn.query('INSERT INTO users (username,email,password) VALUES ("' + data.user.username + '","' + data.user.email + '","' + data.user.password + '")', function (err, result) {
+                if (err)
+                    ws.send(JSON.stringify(err));
+            }); 
+            conn.query('SELECT uid, username, password FROM users', function (err, result) {
+                if (err)
+                    ws.send(JSON.stringify(err));
+                console.log('her1',result);
+                for(let i = 0; i < result.length; i++){
+                    console.log('for',result[i].username, result[i].password);
+                    console.log('data',data.user.username, data.user.password )
+                    if(result[i].username === data.user.username && result[i].password === data.user.password){
+                        console.log('ok');
+                        ws.send(JSON.stringify({
+                            message: 'login',
+                            value: result[i].uid
+                        }));
+                    }
+                }
+            }); 
+            conn.end();
+        } else
+            console.log(data);
+    });
+
+//   ws.on('message', function(message) {
+//     console.log('получено сообщение ' + message);
+
+//     for (var key in clients) {
+//       clients[key].send(message);
+//     }
+//   });
 
     // ws.on('message', function(message) {
     //     console.log(message);
